@@ -1,0 +1,14 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cursorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer circle -->
+  <circle cx="10" cy="10" r="9" fill="url(#cursorGrad)" opacity="0.2"/>
+  <!-- Inner circle -->
+  <circle cx="10" cy="10" r="6" fill="url(#cursorGrad)" stroke="#fff" stroke-width="1.5"/>
+  <!-- Center dot -->
+  <circle cx="10" cy="10" r="2" fill="#fff"/>
+</svg>

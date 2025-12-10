@@ -1,0 +1,208 @@
+/* Rive Animation Styles */
+
+.rive-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.rive-button-animation {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rive-button-content {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Rive Animation Container */
+.rive-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rive-container canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Hero Rive Background */
+.hero-rive-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Floating Rive Animation */
+.rive-floating {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Rive Icon */
+.rive-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+
+.rive-icon-large {
+  width: 48px;
+  height: 48px;
+}
+
+.rive-icon-xl {
+  width: 64px;
+  height: 64px;
+}
+
+/* Modern Theme Toggle Switch */
+.theme-toggle-switch {
+  position: relative;
+  width: 56px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle-switch:hover {
+  transform: scale(1.05);
+}
+
+.theme-toggle-switch:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.theme-toggle-switch.dark .theme-toggle-track {
+  background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.theme-toggle-switch.dark .theme-toggle-thumb {
+  transform: translateX(24px);
+  background: #fbbf24;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(251, 191, 36, 0.3);
+}
+
+.theme-toggle-icon {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-size: 14px;
+  color: #667eea;
+}
+
+.theme-toggle-switch.dark .theme-toggle-icon {
+  color: #1e3a8a;
+}
+
+.theme-toggle-sun {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.theme-toggle-moon {
+  opacity: 0;
+  transform: scale(0.8) rotate(-90deg);
+}
+
+.theme-toggle-switch.dark .theme-toggle-sun {
+  opacity: 0;
+  transform: scale(0.8) rotate(90deg);
+}
+
+.theme-toggle-switch.dark .theme-toggle-moon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* Add subtle glow effect */
+.theme-toggle-track::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(circle at var(--glow-x, 20%), var(--glow-y, 50%), rgba(255, 255, 255, 0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.theme-toggle-switch:hover .theme-toggle-track::before {
+  opacity: 0.6;
+}
+
+.theme-toggle-switch.dark .theme-toggle-track::before {
+  --glow-x: 80%;
+  background: radial-gradient(circle at var(--glow-x, 80%), var(--glow-y, 50%), rgba(251, 191, 36, 0.3), transparent 70%);
+}
+

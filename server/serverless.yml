@@ -1,0 +1,33 @@
+service: fr0strated-portfolio-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: ${opt:stage, 'prod'}
+  environment:
+    NODE_ENV: ${self:provider.stage}
+    CORS_ORIGIN: https://fr0strated.me
+  httpApi:
+    cors: true
+
+functions:
+  api:
+    handler: serverless-wrapper.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+      - httpApi:
+          path: /
+          method: ANY
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+

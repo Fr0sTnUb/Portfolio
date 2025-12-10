@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+server/node_modules/
+
+# Build outputs
+dist/
+build/
+.serverless/
+
+# Environment variables
+.env
+.env.local
+.env.production
+server/.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# AWS
+.aws/
+*.pem
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.cache/
+.temp/
