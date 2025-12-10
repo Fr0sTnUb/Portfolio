@@ -1,8 +1,5 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (import.meta.env.PROD 
-    ? 'https://api.fr0strated.me' 
-    : 'http://localhost:3000');
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.fr0strated.me';
 
 export const API_ENDPOINTS = {
   HEALTH: `${API_BASE_URL}/api/health`,
