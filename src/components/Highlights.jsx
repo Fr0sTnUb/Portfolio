@@ -7,7 +7,7 @@ const Highlights = () => {
           <h2 data-text-reveal="2">Signature wins and community impact</h2>
         </div>
         <div className="highlight-grid">
-          <article className="highlight-card" data-text-reveal="3">
+          <article className="highlight-card highlight-card-fullstack" data-text-reveal="3">
             <div className="highlight-icon">
               <i className="ri-sparkling-2-fill"></i>
             </div>

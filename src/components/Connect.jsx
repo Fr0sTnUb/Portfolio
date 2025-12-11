@@ -8,17 +8,49 @@ const Connect = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setFormMessage('')
     
     const formData = new FormData(e.target)
     const data = Object.fromEntries(formData.entries())
     
     try {
+      console.log('Submitting contact form with data:', data)
       const response = await apiService.sendContact(data)
-      setFormMessage(response.message || 'Thanks for reaching out! I will reply soon.')
-      e.target.reset()
+      console.log('Contact form response:', response)
+      
+      if (response.success === false) {
+        setFormMessage(response.message || 'Sorry, there was an error. Please try again.')
+      } else {
+        setFormMessage(response.message || 'Thanks for reaching out! I will reply soon.')
+        e.target.reset()
+      }
     } catch (error) {
-      setFormMessage('Sorry, there was an error sending your message. Please try again later.')
-      console.error('Contact form error:', error)
+      console.error('Contact form error details:', {
+        error,
+        message: error.message,
+        responseData: error.responseData,
+        status: error.status,
+        isNetworkError: error.isNetworkError
+      })
+      
+      // Try to extract error message from response
+      let errorMessage = 'Sorry, there was an error sending your message. Please try again later.'
+      
+      if (error.isNetworkError) {
+        errorMessage = 'Unable to connect to server. Please check your internet connection and try again.'
+      } else if (error.responseData) {
+        // Handle API error response
+        errorMessage = error.responseData.message || error.responseData.error || errorMessage
+      } else if (error.status === 400) {
+        errorMessage = 'Invalid form data. Please check your inputs and try again.'
+      } else if (error.status === 500) {
+        errorMessage = 'Server error. Please try again later or contact me directly.'
+      } else if (error.message) {
+        // Handle other errors
+        errorMessage = error.message
+      }
+      
+      setFormMessage(errorMessage)
     } finally {
       setIsSubmitting(false)
       setTimeout(() => {

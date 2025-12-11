@@ -394,6 +394,7 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 0;
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 .primary-nav [data-theme="dark"] .nav-pill-slider,
@@ -424,9 +425,10 @@ button {
   position: relative;
   z-index: 1;
   white-space: nowrap;
-  flex: 1;
+  flex: 1 1 0;
   text-align: center;
   min-width: 0;
+  box-sizing: border-box;
 }
 
 .nav-link::after {
@@ -1007,6 +1009,10 @@ button {
   border-color: rgba(99, 102, 241, 0.2);
 }
 
+.widget-card:hover .widget-image {
+  opacity: 0.25;
+}
+
 .widget-card:hover::before {
   opacity: 1;
 }
@@ -1025,7 +1031,47 @@ button {
               0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.widget-icon-image {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  padding: 0.5rem;
+  overflow: hidden;
+}
+
+.widget-icon-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transform: scale(2.5);
+}
+
+.widget-card-discord::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/discord-bots.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  border-radius: 16px;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.widget-card-projects:hover::after,
+.widget-card-discord:hover::after {
+  opacity: 0.35;
+}
+
 .widget-icon {
+  position: relative;
+  z-index: 1;
   flex-shrink: 0;
   width: 48px;
   height: 48px;
@@ -1039,6 +1085,8 @@ button {
 }
 
 .widget-content {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
@@ -2111,6 +2159,28 @@ html[data-theme="dark"] .highlights::before {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
 }
 
+.highlight-card-fullstack {
+  background-image: url('/images/fullstack-craftsmanship.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.highlight-card-fullstack::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(15, 18, 31, 0.85), rgba(15, 18, 31, 0.75));
+  z-index: 0;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .highlight-card-fullstack::after {
+  background: linear-gradient(135deg, rgba(15, 18, 31, 0.9), rgba(15, 18, 31, 0.8));
+}
+
 .highlight-card::before {
   content: "";
   position: absolute;
@@ -2119,6 +2189,7 @@ html[data-theme="dark"] .highlights::before {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.38), rgba(99, 102, 241, 0));
   opacity: 0;
   transition: opacity var(--transition-medium);
+  z-index: 2;
 }
 
 .highlight-card::after {
@@ -2138,6 +2209,14 @@ html[data-theme="dark"] .highlights::before {
   box-shadow: 0 34px 70px -38px rgba(72, 88, 168, 0.75);
 }
 
+.highlight-card-fullstack:hover::after {
+  background: linear-gradient(135deg, rgba(15, 18, 31, 0.75), rgba(15, 18, 31, 0.65));
+}
+
+[data-theme="dark"] .highlight-card-fullstack:hover::after {
+  background: linear-gradient(135deg, rgba(15, 18, 31, 0.8), rgba(15, 18, 31, 0.7));
+}
+
 .highlight-card:hover::before,
 .highlight-card:focus-within::before,
 .highlight-card:hover::after,
@@ -2145,7 +2224,31 @@ html[data-theme="dark"] .highlights::before {
   opacity: 1;
 }
 
+.highlight-card-fullstack::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/fullstack-craftsmanship.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  border-radius: 26px;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.highlight-card-fullstack::before {
+  background-image: url('/images/fullstack-craftsmanship.jpg');
+}
+
 .highlight-icon {
+  position: relative;
+  z-index: 1;
   width: 52px;
   height: 52px;
   border-radius: 18px;
@@ -2157,17 +2260,23 @@ html[data-theme="dark"] .highlights::before {
 }
 
 .highlight-card h3 {
+  position: relative;
+  z-index: 1;
   margin: 0;
   color: var(--text-primary);
   font-size: 1.3rem;
 }
 
 .highlight-card p {
+  position: relative;
+  z-index: 1;
   margin: 0;
   color: var(--text-secondary);
 }
 
 .highlight-list {
+  position: relative;
+  z-index: 1;
   margin: 0;
   padding: 0;
   list-style: none;

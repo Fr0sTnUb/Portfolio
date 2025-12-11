@@ -35,14 +35,54 @@ class ApiService {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Try to parse JSON, but handle cases where response might not be JSON
+      let responseData;
+      const contentType = response.headers.get('content-type');
+      
+      try {
+        if (contentType && contentType.includes('application/json')) {
+          responseData = await response.json();
+        } else {
+          const text = await response.text();
+          responseData = { message: text || `Server error: ${response.status}` };
+        }
+      } catch (parseError) {
+        // If JSON parsing fails, create a default error response
+        responseData = { 
+          error: `Server error: ${response.status}`,
+          message: `Unable to parse server response. Status: ${response.status}`
+        };
       }
 
-      return await response.json();
+      if (!response.ok) {
+        const error = new Error(responseData.message || responseData.error || `HTTP error! status: ${response.status}`);
+        error.response = response;
+        error.responseData = responseData;
+        error.status = response.status;
+        throw error;
+      }
+
+      return responseData;
     } catch (error) {
       console.error('API POST Error:', error);
-      throw error;
+      
+      // If it's already our custom error, re-throw it
+      if (error.response || error.responseData) {
+        throw error;
+      }
+      
+      // Handle network errors (no response at all)
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        const networkError = new Error('Unable to connect to server. Please check your internet connection and try again.');
+        networkError.isNetworkError = true;
+        networkError.originalError = error;
+        throw networkError;
+      }
+      
+      // Otherwise, wrap it
+      const wrappedError = new Error(error.message || 'Network error occurred');
+      wrappedError.originalError = error;
+      throw wrappedError;
     }
   }
 

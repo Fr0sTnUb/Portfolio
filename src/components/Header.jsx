@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import ThemeToggleRive from './ThemeToggleRive'
-import { useScrollBrand } from '../hooks/useScrollBrand'
 
 const Header = () => {
-  const scrollProgress = useScrollBrand()
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
 
   const navLinks = [
-    { href: '#intro', label: 'Intro' },
+    { href: '#hero', label: 'Highlights' },
     { href: '#about', label: 'About' },
     { href: '#skills', label: 'Skills' },
     { href: '#projects', label: 'Projects' },
@@ -19,16 +17,12 @@ const Header = () => {
   ]
 
   const getActiveIndex = () => {
-    // Don't show slider on hero section
-    if (activeSection === 'hero') {
-      return -1
-    }
     const index = navLinks.findIndex(link => activeSection === link.href.slice(1))
     return index >= 0 ? index : -1
   }
 
   const shouldShowSlider = () => {
-    return activeSection !== 'hero' && getActiveIndex() >= 0
+    return getActiveIndex() >= 0
   }
 
   const closeMenu = () => {
@@ -90,11 +84,6 @@ const Header = () => {
           className="brand" 
           href="#hero" 
           onClick={(e) => handleNavClick(e, '#hero')}
-          style={{
-            opacity: scrollProgress > 0.7 ? Math.min(1, (scrollProgress - 0.7) / 0.3) : 0,
-            transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-            visibility: scrollProgress > 0.7 ? 'visible' : 'hidden'
-          }}
         >
           fr0st._.rated
         </a>

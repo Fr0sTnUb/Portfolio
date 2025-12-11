@@ -1,11 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import RiveAnimation from './RiveAnimation'
 import apiService from '../services/api'
-import { useScrollBrand } from '../hooks/useScrollBrand'
 
 const Hero = () => {
-  const scrollProgress = useScrollBrand()
-  const brandRef = useRef(null)
   const heroRef = useRef(null)
   
   const [techStack, setTechStack] = useState([
@@ -78,88 +75,26 @@ const Hero = () => {
     return () => clearInterval(interval)
   }, [skills.length])
 
-  // Calculate animation values based on scroll progress
-  useEffect(() => {
-    if (!brandRef.current) return
-
-    const updateAnimation = () => {
-      const header = document.querySelector('.site-header')
-      const brand = document.querySelector('.brand')
-      
-      if (!header || !brand) return
-
-      const headerRect = header.getBoundingClientRect()
-      const brandRect = brand.getBoundingClientRect()
-
-      // Start position: center of viewport
-      const startX = 0 // Already centered with translate(-50%, -50%)
-      const startY = 0
-      
-      // End position: navbar brand position relative to viewport center
-      const endX = brandRect.left + brandRect.width / 2 - window.innerWidth / 2
-      const endY = headerRect.top + headerRect.height / 2 - window.innerHeight / 2
-
-      // Calculate scale (from 8 to 1)
-      const startScale = 8
-      const endScale = 1
-      const scale = startScale - (startScale - endScale) * scrollProgress
-
-      // Calculate position interpolation
-      const x = startX - (startX - endX) * scrollProgress
-      const y = startY - (startY - endY) * scrollProgress
-
-      // Calculate opacity (fade out as it approaches navbar)
-      const opacity = scrollProgress < 0.85 ? Math.max(0, 1 - scrollProgress * 1.2) : 0
-
-      // Apply transforms
-      brandRef.current.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`
-      brandRef.current.style.opacity = opacity
-    }
-
-    // Use requestAnimationFrame for smooth updates
-    const rafId = requestAnimationFrame(updateAnimation)
-    
-    return () => {
-      cancelAnimationFrame(rafId)
-    }
-  }, [scrollProgress])
 
   return (
     <section id="intro" ref={heroRef} className="section hero" data-animate>
-      {/* Large animated FR0STRATED text */}
-      <div 
-        ref={brandRef}
-        className="hero-brand-text"
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%) scale(8)',
-          zIndex: 1000,
-          pointerEvents: 'none',
-          willChange: 'transform, opacity',
-          transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        
-      </div>
       <div className="container hero-content">
         <div className="hero-copy">
-          <p className="eyebrow" data-text-reveal="1">Full Stack · Data Science · Discord Bots</p>
-          <h1 data-text-reveal="2">
+          <p className="eyebrow">Full Stack · Data Science · Discord Bots</p>
+          <h1>
             Hi, I'm Nitesh Sha
             <span className="accent">(a.k.a. fr0strated)</span>
           </h1>
-          <div className="status-chip" data-text-reveal="3">
+          <div className="status-chip">
             <span className="status-dot"></span>
             Open for collaborations · IST (UTC+5:30)
           </div>
-          <p className="lead" data-text-reveal="4">
+          <p className="lead">
             I craft immersive front-end experiences, engineer intelligent backends,
             and analyse data to unlock insights. On Discord, I'm the go-to builder
             for bots that elevate communities.
           </p>
-          <div className="hero-ctas" data-text-reveal="5">
+          <div className="hero-ctas">
             <a
               className="btn btn-primary"
               href="https://www.linkedin.com/in/nitesh-sha-a988b3276/"
@@ -175,7 +110,7 @@ const Hero = () => {
             </a>
           </div>
           <div className="hero-widgets">
-            <div className="widget-card" data-text-scale>
+            <div className="widget-card">
               <div className="widget-icon">
                 <i className="ri-time-line"></i>
               </div>
@@ -184,16 +119,16 @@ const Hero = () => {
                 <span className="widget-label">Years of building</span>
               </div>
             </div>
-            <div className="widget-card" data-text-scale>
-              <div className="widget-icon">
-                <i className="ri-box-3-line"></i>
+            <div className="widget-card widget-card-projects">
+              <div className="widget-icon widget-icon-image">
+                <img src="/images/projects-shipped.png" alt="Projects shipped" />
               </div>
               <div className="widget-content">
                 <span className="widget-value">20+</span>
                 <span className="widget-label">Projects shipped</span>
               </div>
             </div>
-            <div className="widget-card" data-text-scale>
+            <div className="widget-card widget-card-discord">
               <div className="widget-icon">
                 <i className="ri-robot-2-line"></i>
               </div>

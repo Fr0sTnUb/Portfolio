@@ -12,8 +12,42 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// CORS configuration
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:5174',
+      'https://fr0strated.me',
+      'https://www.fr0strated.me'
+    ];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // In development, allow all origins
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    // In production, check against allowed origins
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -94,12 +128,32 @@ app.post('/api/contact', async (req, res) => {
     
     // Validate input
     if (!name || !email || !message) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ 
+        success: false,
+        error: 'Missing required fields',
+        message: 'Please fill in all required fields.'
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'Invalid email format',
+        message: 'Please provide a valid email address.'
+      });
     }
 
     // TODO: Add email sending logic (using nodemailer, SES, etc.)
     // For now, just log and return success
-    console.log('Contact form submission:', { name, email, subject, message });
+    console.log('Contact form submission:', { 
+      name, 
+      email, 
+      subject: subject || 'No subject', 
+      message,
+      timestamp: new Date().toISOString()
+    });
     
     res.json({ 
       success: true, 
@@ -107,7 +161,11 @@ app.post('/api/contact', async (req, res) => {
     });
   } catch (error) {
     console.error('Contact form error:', error);
-    res.status(500).json({ error: 'Failed to send message' });
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to send message',
+      message: 'Sorry, there was an error sending your message. Please try again later.'
+    });
   }
 });
 
