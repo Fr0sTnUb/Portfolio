@@ -271,16 +271,24 @@ app.post('/api/contact', async (req, res) => {
 // Get all messages (with optional password protection)
 app.get('/api/messages', async (req, res) => {
   try {
-    // Optional password protection
-    const providedPassword = req.query.password || req.headers['x-password'];
+    // Optional password protection - disabled in development, enabled in production if password is set
     const expectedPassword = process.env.MESSAGES_PASSWORD;
+    const isDevelopment = process.env.NODE_ENV !== 'production';
     
-    if (expectedPassword && providedPassword !== expectedPassword) {
-      return res.status(401).json({ 
-        error: 'Unauthorized',
-        message: 'Invalid password'
-      });
+    // Only require password in production if it's actually set and not empty
+    if (!isDevelopment && expectedPassword && expectedPassword.trim() !== '' && expectedPassword !== 'your-secure-password-here') {
+      // Password is required in production
+      const providedPassword = req.query.password || req.headers['x-password'];
+      
+      if (!providedPassword || providedPassword !== expectedPassword) {
+        return res.status(401).json({ 
+          error: 'Unauthorized',
+          message: 'Password required. Add ?password=your-password to the URL'
+        });
+      }
     }
+    
+    // In development, allow access without password
 
     const messages = await readMessages();
     res.json({ 
