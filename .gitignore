@@ -13,6 +13,9 @@ build/
 .env.production
 server/.env
 
+# Messages storage
+server/messages.json
+
 # IDE
 .vscode/
 .idea/

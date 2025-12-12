@@ -3,9 +3,14 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { promises as fs } from 'fs';
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Messages storage file
+const MESSAGES_FILE = path.join(__dirname, 'messages.json');
 
 dotenv.config();
 
@@ -45,6 +50,82 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
+
+// Helper function to read messages
+async function readMessages() {
+  try {
+    const data = await fs.readFile(MESSAGES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    // If file doesn't exist, return empty array
+    if (error.code === 'ENOENT') {
+      return [];
+    }
+    throw error;
+  }
+}
+
+// Helper function to save messages
+async function saveMessages(messages) {
+  await fs.writeFile(MESSAGES_FILE, JSON.stringify(messages, null, 2), 'utf8');
+}
+
+// Helper function to send email notification
+async function sendEmailNotification(contactData) {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('📧 Email not configured. Set SMTP_USER and SMTP_PASS in .env to receive email notifications.');
+    return false;
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_SECURE === 'true',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to: process.env.CONTACT_EMAIL || process.env.SMTP_USER,
+      replyTo: contactData.email,
+      subject: `📨 New Contact: ${contactData.subject || `Message from ${contactData.name}`}`,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${contactData.name}</p>
+        <p><strong>Email:</strong> ${contactData.email}</p>
+        ${contactData.subject ? `<p><strong>Subject:</strong> ${contactData.subject}</p>` : ''}
+        <p><strong>Message:</strong></p>
+        <p>${contactData.message.replace(/\n/g, '<br>')}</p>
+        <hr>
+        <p><small>Received: ${new Date(contactData.timestamp).toLocaleString()}</small></p>
+      `,
+      text: `
+New Contact Form Submission
+
+Name: ${contactData.name}
+Email: ${contactData.email}
+${contactData.subject ? `Subject: ${contactData.subject}` : ''}
+
+Message:
+${contactData.message}
+
+---
+Received: ${new Date(contactData.timestamp).toLocaleString()}
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('✅ Email notification sent successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ Email sending error:', error.message);
+    return false;
+  }
+}
 
 // Middleware
 app.use(cors(corsOptions));
@@ -145,14 +226,32 @@ app.post('/api/contact', async (req, res) => {
       });
     }
 
-    // TODO: Add email sending logic (using nodemailer, SES, etc.)
-    // For now, just log and return success
-    console.log('Contact form submission:', { 
-      name, 
-      email, 
-      subject: subject || 'No subject', 
-      message,
-      timestamp: new Date().toISOString()
+    // Create contact data
+    const contactData = {
+      id: Date.now().toString(),
+      name: name.trim(),
+      email: email.trim(),
+      message: message.trim(),
+      subject: subject ? subject.trim() : null,
+      timestamp: new Date().toISOString(),
+      read: false
+    };
+
+    // Save to file
+    const messages = await readMessages();
+    messages.unshift(contactData); // Add to beginning
+    await saveMessages(messages);
+
+    console.log('✅ Contact form submission saved:', {
+      id: contactData.id,
+      name: contactData.name,
+      email: contactData.email,
+      timestamp: contactData.timestamp
+    });
+
+    // Send email notification (non-blocking)
+    sendEmailNotification(contactData).catch(err => {
+      console.error('Email notification error (non-critical):', err);
     });
     
     res.json({ 
@@ -166,6 +265,55 @@ app.post('/api/contact', async (req, res) => {
       error: 'Failed to send message',
       message: 'Sorry, there was an error sending your message. Please try again later.'
     });
+  }
+});
+
+// Get all messages (with optional password protection)
+app.get('/api/messages', async (req, res) => {
+  try {
+    // Optional password protection
+    const providedPassword = req.query.password || req.headers['x-password'];
+    const expectedPassword = process.env.MESSAGES_PASSWORD;
+    
+    if (expectedPassword && providedPassword !== expectedPassword) {
+      return res.status(401).json({ 
+        error: 'Unauthorized',
+        message: 'Invalid password'
+      });
+    }
+
+    const messages = await readMessages();
+    res.json({ 
+      success: true,
+      count: messages.length,
+      messages: messages
+    });
+  } catch (error) {
+    console.error('Get messages error:', error);
+    res.status(500).json({ 
+      error: 'Failed to retrieve messages',
+      message: error.message
+    });
+  }
+});
+
+// Mark message as read
+app.put('/api/messages/:id/read', async (req, res) => {
+  try {
+    const messages = await readMessages();
+    const message = messages.find(m => m.id === req.params.id);
+    
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+    
+    message.read = true;
+    await saveMessages(messages);
+    
+    res.json({ success: true, message: 'Message marked as read' });
+  } catch (error) {
+    console.error('Update message error:', error);
+    res.status(500).json({ error: 'Failed to update message' });
   }
 });
 
