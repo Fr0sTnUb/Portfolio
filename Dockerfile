@@ -8,7 +8,7 @@ COPY package*.json ./
 
 # Install dependencies
 # Use npm ci if package-lock.json exists, otherwise use npm install
-RUN if [ -f package-lock.json ]; then npm ci --legacy-peer-deps; else npm install --legacy-peer-deps; fi
+RUN npm ci --legacy-peer-deps
 
 # Copy source code
 COPY . .
