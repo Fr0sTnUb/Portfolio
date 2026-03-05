@@ -25,12 +25,13 @@ const allowedOrigins = process.env.CORS_ORIGIN
       'http://localhost:3000',
       'http://localhost:5174',
       'https://fr0strated.me',
+      'https://fr0strated.me/',
       'https://www.fr0strated.me'
     ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps, curl, or nginx proxy)
     if (!origin) return callback(null, true);
     
     // In development, allow all origins
@@ -39,16 +40,24 @@ const corsOptions = {
     }
     
     // In production, check against allowed origins
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Also allow requests from the same domain (when proxied through nginx)
+    const isAllowed = allowedOrigins.indexOf(origin) !== -1;
+    
+    if (isAllowed) {
       callback(null, true);
     } else {
-      console.warn(`CORS blocked origin: ${origin}`);
+      console.warn(`CORS blocked origin: ${origin}. Allowed origins:`, allowedOrigins);
+      // In production, be more permissive if origin matches the domain pattern
+      // This helps when requests come through nginx proxy
+      if (origin.includes('fr0strated.me')) {
+        return callback(null, true);
+      }
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
 
 // Helper function to read messages

@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react'
 
+/**
+ * useTheme — toggles light/dark mode by adding/removing the `.light`
+ * class on <html>. Persists choice in localStorage.
+ * Returns [isDark, toggleTheme]
+ */
 export const useTheme = () => {
-  const STORAGE_KEY = 'fr0strated-theme'
-
-  const getSystemPreference = () => {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'
-  }
-
-  const [theme, setTheme] = useState(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    return stored || getSystemPreference()
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme')
+    if (saved) return saved === 'dark'
+    // Respect OS preference if no saved value
+    return !window.matchMedia('(prefers-color-scheme: light)').matches
   })
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem(STORAGE_KEY, theme)
-  }, [theme])
+    const root = document.documentElement
+    if (isDark) {
+      root.classList.remove('light')
+    } else {
+      root.classList.add('light')
+    }
+    localStorage.setItem('theme', isDark ? 'dark' : 'light')
+  }, [isDark])
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'))
-  }
-
-  return { theme, toggleTheme }
+  const toggle = () => setIsDark(prev => !prev)
+  return [isDark, toggle]
 }
-

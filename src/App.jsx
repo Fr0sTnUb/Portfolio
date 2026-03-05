@@ -1,34 +1,45 @@
+import { useEffect, useRef } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import Highlights from './components/Highlights'
 import About from './components/About'
 import Skills from './components/Skills'
 import Projects from './components/Projects'
-import Labs from './components/Labs'
 import Journey from './components/Journey'
-import Connect from './components/Connect'
+import Contact from './components/Contact'
 import Footer from './components/Footer'
-import { useScrollAnimation } from './hooks/useScrollAnimation'
-import { useLenis } from './hooks/useLenis'
-import { useCustomCursor } from './hooks/useCustomCursor'
 
 function App() {
-  useLenis()
-  useScrollAnimation()
-  useCustomCursor()
+  const progressRef = useRef(null)
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress  = docHeight > 0 ? scrollTop / docHeight : 0
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${progress})`
+      }
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true })
+    updateProgress()
+    return () => window.removeEventListener('scroll', updateProgress)
+  }, [])
 
   return (
     <>
+      <div
+        ref={progressRef}
+        className="scroll-progress"
+        style={{ transformOrigin: 'left' }}
+      />
       <Header />
       <main>
         <Hero />
-        <Highlights />
         <About />
         <Skills />
         <Projects />
-        <Labs />
         <Journey />
-        <Connect />
+        <Contact />
       </main>
       <Footer />
     </>
@@ -36,4 +47,3 @@ function App() {
 }
 
 export default App
-

@@ -1,0 +1,663 @@
+@import "tailwindcss";
+
+/* ─── DS / AI Design Tokens — Dark (default) ───────── */
+:root {
+  --cyan:    #00d4ff;
+  --purple:  #7c3aed;
+  --green:   #10b981;
+  --red:     #ef4444;
+  --yellow:  #f59e0b;
+  --text:    #e2e8f0;
+  --text-dim:#94a3b8;
+  --bg:      #0a0e1a;
+  --bg-mid:  #0d1221;
+  --card-bg: #0f1629;
+  --card-bg2:#111827;
+  --border:  #1e2d40;
+  --border-bright: #2d4a6b;
+  --dot-color: #1e2d40;
+  --glass-bg:  rgba(255,255,255,0.03);
+  --glass-border: rgba(0,212,255,0.12);
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Clash Display', sans-serif;
+}
+
+/* ─── Light Mode Overrides ───────────────────────────── */
+:root.light {
+  --bg:      #f0f4ff;
+  --bg-mid:  #e8edf8;
+  --card-bg: rgba(255,255,255,0.70);
+  --card-bg2:#f1f5fb;
+  --text:    #0a0e1a;
+  --text-dim:#4a5568;
+  --border:  #cbd5e1;
+  --border-bright: #94a3b8;
+  --cyan:    #0284c7;
+  --purple:  #7c3aed;
+  --green:   #059669;
+  --dot-color: #cbd5e1;
+  --glass-bg:  rgba(255,255,255,0.50);
+  --glass-border: rgba(2,132,199,0.20);
+}
+
+/* ─── Base Reset ─────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--bg);
+}
+
+body {
+  font-family: var(--font-mono);
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  /* Dot-grid texture — uses var so light mode auto-updates */
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-attachment: fixed;
+}
+
+a  { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
+
+::selection { background: var(--cyan); color: var(--bg); }
+
+/* ─── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* ─── Scroll Progress Bar ────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  z-index: 9999;
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* ─── DS Card ────────────────────────────────────────── */
+.ds-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.ds-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.12);
+}
+
+.ds-card-lift:hover {
+  transform: translateY(-4px);
+  border-color: var(--cyan);
+  box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
+}
+
+/* ─── Glow Utilities ─────────────────────────────────── */
+.glow-cyan  { box-shadow: 0 0 12px rgba(0, 212, 255, 0.4); }
+.glow-purple{ box-shadow: 0 0 12px rgba(124, 58, 237, 0.4); }
+.text-cyan  { color: var(--cyan); }
+.text-purple{ color: var(--purple); }
+.text-dim   { color: var(--text-dim); }
+
+/* ─── Section Label (# ── 01. LABEL ────) ─────────────── */
+.ds-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  letter-spacing: 0.08em;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ds-label::before { content: '#'; color: var(--purple); }
+.ds-label-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-bright), transparent);
+}
+
+/* ─── Code Block Style ───────────────────────────────── */
+.code-block {
+  background: #070b15;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  position: relative;
+}
+
+.code-block::before {
+  content: '●  ●  ●';
+  display: block;
+  padding: 0.6rem 1rem;
+  font-size: 0.65rem;
+  color: #3a4a5c;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.3em;
+}
+
+/* ─── DS Button ──────────────────────────────────────── */
+.btn-cyan {
+  background: var(--cyan);
+  color: var(--bg);
+  border: 1px solid var(--cyan);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 1.75rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-cyan:hover {
+  background: transparent;
+  color: var(--cyan);
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 1.75rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background: rgba(0, 212, 255, 0.08);
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.3);
+}
+
+/* ─── Tag Badge ──────────────────────────────────────── */
+.ds-tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+.ds-tag-purple {
+  background: rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.3);
+  color: #a78bfa;
+}
+
+/* ─── Animated Bar Chart ─────────────────────────────── */
+.skill-bar-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.skill-bar-fill.animated { width: var(--target-width, 80%); }
+
+/* ─── Timeline ───────────────────────────────────────── */
+.timeline-cyan-line {
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--cyan), var(--purple), transparent);
+  box-shadow: 0 0 8px var(--cyan);
+  transform: translateX(-50%);
+}
+
+.timeline-node {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan), 0 0 20px rgba(0,212,255,0.4);
+  border: 2px solid var(--bg);
+}
+
+/* ─── Scroll Reveal ──────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+/* ─── Neural Canvas ──────────────────────────────────── */
+.neural-canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Typewriter cursor ──────────────────────────────── */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--cyan);
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: blink 0.85s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ─── Metric Cards ───────────────────────────────────── */
+.metric-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--cyan);
+  padding: 1rem 1.25rem;
+  min-width: 130px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+.metric-card .metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+.metric-card .metric-label {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+
+/* ─── Form Inputs DS Style ───────────────────────────── */
+.ds-input {
+  background: #070b15;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.65rem 1rem;
+  width: 100%;
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ds-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.12);
+}
+
+.ds-input::placeholder { color: #3a4a5c; }
+
+/* ─── Social Card ────────────────────────────────────── */
+.social-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  text-decoration: none;
+  color: var(--text-dim);
+}
+
+.social-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 16px rgba(0,212,255,0.2);
+  color: var(--cyan);
+  transform: translateY(-3px);
+}
+
+/* ─── Count-up animation ─────────────────────────────── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.count-up { animation: countUp 0.6s ease forwards; }
+
+/* ─── Mobile Hamburger ───────────────────────────────── */
+.hamburger-line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--cyan);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+/* ─── Section Spacing ────────────────────────────────── */
+.section-pad {
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+}
+
+/* ─── Cyan HR Divider ────────────────────────────────── */
+.cyan-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.3;
+  margin: 0;
+}
+
+/* ─── Reduced Motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-left, .reveal-right {
+    opacity: 1; transform: none;
+  }
+}
+
+/* ─── Mobile ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .timeline-cyan-line { left: 1.5rem; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLASSMORPHISM SYSTEM
+═══════════════════════════════════════════════════════ */
+
+/* Base glass — navbar, footer, floating UI */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: 12px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Strong glass — hero content, About bio/model card */
+.glass-strong {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 16px;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Card glass — project cards, skill blocks, journey cards, social cards */
+.glass-card {
+  background: rgba(15, 22, 41, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 212, 255, 0.12);
+  border-radius: 14px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow:
+    0 8px 40px rgba(0, 212, 255, 0.12),
+    inset 0 0 0 1px rgba(0, 212, 255, 0.05);
+}
+
+/* Shimmer sweep on hover */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    transparent 100%
+  );
+  transition: left 0.55s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.glass-card:hover::before { left: 150%; }
+
+/* Lift variant */
+.glass-lift:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 212, 255, 0.45);
+  box-shadow: 0 16px 48px rgba(0, 212, 255, 0.15), inset 0 0 0 1px rgba(0,212,255,0.08);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION TITLE KEYFRAMES
+═══════════════════════════════════════════════════════ */
+
+/* Hero — Glitch Reveal */
+@keyframes glitch-in {
+  0%   { transform: skewX(-15deg); opacity: 0; filter: blur(4px); }
+  20%  { transform: skewX(10deg);  opacity: 0.6; color: #00d4ff; }
+  40%  { transform: skewX(-5deg);  opacity: 0.8; }
+  60%  { transform: skewX(3deg);   opacity: 1; }
+  80%  { transform: skewX(-1deg); }
+  100% { transform: skewX(0deg);   opacity: 1; filter: blur(0); }
+}
+.title-glitch { animation: glitch-in 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+
+/* About — Typewriter Slide-In */
+@keyframes type-slide {
+  0%   { clip-path: inset(0 100% 0 0); opacity: 0; }
+  100% { clip-path: inset(0 0% 0 0);   opacity: 1; }
+}
+.title-typewriter { animation: type-slide 0.9s steps(20, end) forwards; }
+
+/* Skills — Scan Line Wipe */
+@keyframes scan-wipe {
+  0%   { clip-path: inset(0 100% 0 0); opacity: 0; }
+  100% { clip-path: inset(0 0% 0 0);   opacity: 1; }
+}
+.title-scan { animation: scan-wipe 0.9s ease-out forwards; }
+
+/* Projects — Data Load flicker */
+@keyframes data-load {
+  0%   { opacity: 0; letter-spacing: 0.5em; filter: blur(3px); }
+  50%  { opacity: 0.7; letter-spacing: 0.15em; color: #10b981; }
+  100% { opacity: 1; letter-spacing: -0.02em; filter: blur(0); }
+}
+.title-dataload { animation: data-load 0.9s ease-out forwards; }
+
+/* Journey — Power On Flicker */
+@keyframes power-flicker {
+  0%  { opacity: 0; }
+  10% { opacity: 1; }
+  15% { opacity: 0; }
+  25% { opacity: 1; }
+  30% { opacity: 0; }
+  45% { opacity: 1; }
+  55% { opacity: 0.7; }
+  100%{ opacity: 1; }
+}
+.title-flicker { animation: power-flicker 1s ease-in forwards; }
+
+/* Contact — Matrix Drop */
+@keyframes matrix-drop {
+  0%   { transform: translateY(-30px) scaleY(1.4); opacity: 0; filter: blur(6px); color: #10b981; }
+  60%  { transform: translateY(4px)   scaleY(0.95); opacity: 0.9; }
+  100% { transform: translateY(0)     scaleY(1); opacity: 1; filter: blur(0); }
+}
+.title-matrix { animation: matrix-drop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+/* ═══════════════════════════════════════════════════════
+   STAGGER CHILDREN
+═══════════════════════════════════════════════════════ */
+@keyframes fade-up {
+  0%   { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-child { opacity: 0; animation: fade-up 0.6s ease forwards; }
+.stagger-child:nth-child(1) { animation-delay: 0.10s; }
+.stagger-child:nth-child(2) { animation-delay: 0.22s; }
+.stagger-child:nth-child(3) { animation-delay: 0.34s; }
+.stagger-child:nth-child(4) { animation-delay: 0.46s; }
+.stagger-child:nth-child(5) { animation-delay: 0.58s; }
+.stagger-child:nth-child(6) { animation-delay: 0.70s; }
+
+/* ═══════════════════════════════════════════════════════
+   REDUCED MOTION — override all animations
+═══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-left, .reveal-right { opacity: 1 !important; transform: none !important; }
+  .title-glitch, .title-typewriter, .title-scan,
+  .title-dataload, .title-flicker, .title-matrix { opacity: 1 !important; }
+}
+
+/* Mobile — reduce blur for performance */
+@media (max-width: 768px) {
+  .glass       { backdrop-filter: blur(8px);  -webkit-backdrop-filter: blur(8px); }
+  .glass-strong{ backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .glass-card  { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   THEME TOGGLE — responsive label vs icon
+═══════════════════════════════════════════════════════ */
+.theme-btn-icon  { display: none; }
+.theme-btn-label { display: inline; }
+
+@media (max-width: 900px) {
+  .theme-btn-label { display: none; }
+  .theme-btn-icon  { display: inline; font-size: 1rem; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   LIGHT MODE COMPONENT OVERRIDES
+═══════════════════════════════════════════════════════ */
+
+/* Glass cards — white translucent in light mode */
+:root.light .glass-card {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border-color: rgba(2, 132, 199, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+}
+:root.light .glass-strong {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border-color: rgba(2, 132, 199, 0.25) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,1) !important;
+}
+:root.light .glass {
+  background: rgba(255, 255, 255, 0.50) !important;
+  border-color: rgba(2, 132, 199, 0.15) !important;
+}
+
+/* Navbar in light mode */
+:root.light header {
+  background: rgba(240, 244, 255, 0.85) !important;
+  border-bottom: 1px solid rgba(2, 132, 199, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+}
+
+/* Scrollbar in light mode */
+:root.light ::-webkit-scrollbar-track { background: #e8edf8; }
+:root.light ::-webkit-scrollbar-thumb { background: #94a3b8; }
+
+/* Tech ticker strip in light mode */
+:root.light .tech-strip {
+  background: rgba(226,232,240,0.9) !important;
+  border-color: rgba(2, 132, 199, 0.2) !important;
+}
+
+/* Skill bar track in light mode */
+:root.light .skill-bar-track {
+  background: rgba(2, 132, 199, 0.12) !important;
+}
+
+/* Code block in light mode */
+:root.light .code-block {
+  background: rgba(240, 244, 255, 0.9) !important;
+  border-color: rgba(2, 132, 199, 0.2) !important;
+}
+
+/* ds-tag in light mode */
+:root.light .ds-tag {
+  background: rgba(2, 132, 199, 0.08) !important;
+  border-color: rgba(2, 132, 199, 0.25) !important;
+  color: var(--cyan) !important;
+}
+
+/* ds-input in light mode */
+:root.light .ds-input {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(2, 132, 199, 0.25) !important;
+  color: var(--text) !important;
+}
+
+
