@@ -1,30 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#e0e7ff;stop-opacity:0.95" />
-    </linearGradient>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#0f1629;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0e1a;stop-opacity:1" />
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="0.8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glowStrong">
+      <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  
-  <!-- Background circle -->
-  <circle cx="50" cy="50" r="45" fill="url(#bgGrad)"/>
-  
-  <!-- Abstract geometric "f" design - modern and tech-inspired -->
-  <!-- Main vertical stroke -->
-  <rect x="35" y="28" width="8" height="44" rx="4" fill="url(#iconGrad)"/>
-  
-  <!-- Top horizontal bar -->
-  <rect x="35" y="28" width="20" height="8" rx="4" fill="url(#iconGrad)"/>
-  
-  <!-- Middle horizontal bar -->
-  <rect x="35" y="46" width="16" height="8" rx="4" fill="url(#iconGrad)"/>
-  
-  <!-- Tech accent - small dot pattern -->
-  <circle cx="58" cy="32" r="3" fill="url(#iconGrad)" opacity="0.9"/>
-  <circle cx="54" cy="36" r="2" fill="url(#iconGrad)" opacity="0.7"/>
+
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="url(#bgGrad)"/>
+
+  <!-- Border -->
+  <rect width="32" height="32" rx="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- Corner brackets - top left -->
+  <path d="M3 8 L3 3 L8 3" fill="none" stroke="#00d4ff" stroke-width="1.2" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Corner brackets - top right -->
+  <path d="M24 3 L29 3 L29 8" fill="none" stroke="#00d4ff" stroke-width="1.2" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Corner brackets - bottom left -->
+  <path d="M3 24 L3 29 L8 29" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Corner brackets - bottom right -->
+  <path d="M24 29 L29 29 L29 24" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round" filter="url(#glow)"/>
+
+  <!-- F letter - bold monospace style -->
+  <g filter="url(#glowStrong)">
+    <!-- F vertical bar -->
+    <rect x="9" y="8" width="2.2" height="16" rx="0.4" fill="#00d4ff"/>
+    <!-- F top horizontal -->
+    <rect x="9" y="8" width="9" height="2.2" rx="0.4" fill="#00d4ff"/>
+    <!-- F middle horizontal -->
+    <rect x="9" y="14.9" width="7" height="2.2" rx="0.4" fill="#00d4ff"/>
+  </g>
+
+  <!-- Accent dot - cyan -->
+  <circle cx="22" cy="10" r="1.5" fill="#00d4ff" filter="url(#glow)" opacity="0.9"/>
+  <!-- Accent dot - purple -->
+  <circle cx="22" cy="22" r="1.5" fill="#7c3aed" filter="url(#glow)" opacity="0.9"/>
+
+  <!-- Small data line accents -->
+  <line x1="20" y1="16" x2="24" y2="16" stroke="#10b981" stroke-width="1" opacity="0.7" filter="url(#glow)"/>
+  <line x1="21" y1="14" x2="24" y2="14" stroke="#10b981" stroke-width="0.7" opacity="0.4"/>
+  <line x1="21" y1="18" x2="24" y2="18" stroke="#10b981" stroke-width="0.7" opacity="0.4"/>
 </svg>
