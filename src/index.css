@@ -48,6 +48,7 @@
   padding: 0;
   box-sizing: border-box;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  cursor: none !important;
 }
 
 html {
@@ -63,10 +64,6 @@ body {
   line-height: 1.7;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  /* Dot-grid texture — uses var so light mode auto-updates */
-  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
-  background-size: 28px 28px;
-  background-attachment: fixed;
 }
 
 a  { color: inherit; text-decoration: none; }
@@ -80,6 +77,47 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* ─── Offset all sections below the fixed navbar ─────── */
+main {
+  padding-top: 72px;
+}
+
+/* ─── Cursor — positioned by GSAP quickTo ────────────── */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00D4FF;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  box-shadow:
+    0 0 6px  2px rgba(0, 212, 255, 0.95),
+    0 0 16px 5px rgba(0, 212, 255, 0.55),
+    0 0 32px 10px rgba(0, 212, 255, 0.22),
+    0 0 64px 20px rgba(0, 212, 255, 0.08);
+}
+
+/* ─── Particle Canvas ────────────────────────────────── */
+.particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Make sure all content sits above the canvas */
+header, main, footer {
+  position: relative;
+  z-index: 1;
+}
 
 /* ─── Scroll Progress Bar ────────────────────────────── */
 .scroll-progress {
@@ -413,6 +451,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   }
 }
 
+/* ─── Disable custom cursor on mobile ────────────────── */
+@media (max-width: 767px) {
+  .cursor-dot, .cursor-glow { display: none; }
+  *, *::before, *::after    { cursor: auto !important; }
+}
+
 /* ─── Mobile ─────────────────────────────────────────── */
 @media (max-width: 768px) {
   .timeline-cyan-line { left: 1.5rem; }
@@ -653,11 +697,123 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--cyan) !important;
 }
 
-/* ds-input in light mode */
+/* ─── ds-input in light mode ───────────────────────────── */
 :root.light .ds-input {
   background: rgba(255, 255, 255, 0.8) !important;
   border-color: rgba(2, 132, 199, 0.25) !important;
   color: var(--text) !important;
 }
 
+/* ══════════════════════════════════════════════
+   FLICKER-ON HOVER — old tubelight / CRT effect
+   Targets all interactive elements globally
+   ══════════════════════════════════════════════ */
 
+/* Apply to every button, nav link, card button, and anchor that looks like a button */
+a[style],
+button,
+.project-btn,
+.nav-link,
+.mobile-nav-link,
+.cv-back,
+.cv-download-btn,
+[class*="btn"],
+[class*="button"] {
+  position: relative;
+  overflow: hidden;
+}
+
+/* The flicker happens on the text + border via a pseudo element overlay */
+a[style]::after,
+button::after,
+.project-btn::after,
+[class*="btn"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+}
+
+/* Trigger flicker animation on hover */
+a[style]:hover::after,
+button:hover::after,
+.project-btn:hover::after,
+[class*="btn"]:hover::after {
+  animation: flicker-overlay 0.6s ease forwards;
+}
+
+/* Flicker keyframes — simulates a fluorescent tube striking */
+@keyframes flicker-overlay {
+  0%   { opacity: 0;    background: rgba(0, 212, 255, 0.0); }
+  4%   { opacity: 1;    background: rgba(0, 212, 255, 0.3); }   /* first strike  */
+  6%   { opacity: 0;    background: rgba(0, 212, 255, 0.0); }   /* cuts out      */
+  8%   { opacity: 1;    background: rgba(0, 212, 255, 0.25); }  /* second strike */
+  10%  { opacity: 0;    background: rgba(0, 212, 255, 0.0); }   /* cuts out      */
+  14%  { opacity: 1;    background: rgba(0, 212, 255, 0.2); }   /* third strike  */
+  16%  { opacity: 0;    background: rgba(0, 212, 255, 0.0); }   /* cuts out      */
+  22%  { opacity: 1;    background: rgba(0, 212, 255, 0.15); }  /* fourth        */
+  24%  { opacity: 0.3;  background: rgba(0, 212, 255, 0.05); }  /* dim flicker   */
+  30%  { opacity: 1;    background: rgba(0, 212, 255, 0.12); }  /* fifth         */
+  34%  { opacity: 0.2;  background: rgba(0, 212, 255, 0.03); }  /* almost dies   */
+  42%  { opacity: 1;    background: rgba(0, 212, 255, 0.10); }  /* sixth         */
+  50%  { opacity: 0.6;  background: rgba(0, 212, 255, 0.06); }  /* settling      */
+  62%  { opacity: 1;    background: rgba(0, 212, 255, 0.07); }  /* stabilising   */
+  78%  { opacity: 0.9;  background: rgba(0, 212, 255, 0.05); }  /* almost stable */
+  100% { opacity: 0;    background: rgba(0, 212, 255, 0.0); }   /* fully on — overlay fades, hover style takes over */
+}
+
+/* ── Text flicker — the actual label flickers too ── */
+/* Wrapping the flicker on the element itself via filter */
+button:hover,
+.project-btn:hover,
+[class*="btn"]:hover {
+  animation: flicker-brightness 0.6s ease forwards;
+}
+
+@keyframes flicker-brightness {
+  0%   { filter: brightness(1);    }
+  4%   { filter: brightness(2.5);  }   /* flash bright   */
+  6%   { filter: brightness(0.3);  }   /* cuts out       */
+  8%   { filter: brightness(2.0);  }   /* restrike       */
+  10%  { filter: brightness(0.2);  }   /* cuts out       */
+  14%  { filter: brightness(1.8);  }   /* third strike   */
+  16%  { filter: brightness(0.4);  }   /* dim            */
+  22%  { filter: brightness(1.6);  }   /* fourth         */
+  24%  { filter: brightness(0.7);  }   /* semi-dim       */
+  30%  { filter: brightness(1.5);  }   /* fifth          */
+  34%  { filter: brightness(0.5);  }   /* semi-dim       */
+  42%  { filter: brightness(1.4);  }   /* sixth          */
+  50%  { filter: brightness(1.1);  }   /* settling       */
+  65%  { filter: brightness(1.3);  }   /* slight pulse   */
+  80%  { filter: brightness(1.1);  }   /* nearly stable  */
+  100% { filter: brightness(1);    }   /* fully on       */
+}
+
+/* ── Nav links — flicker on the text color ────────── */
+.nav-link:hover,
+header a:hover,
+header button:hover {
+  animation: flicker-brightness 0.5s ease forwards;
+}
+
+/* ── Make sure existing hover transitions don't fight
+   the flicker — delay the color/bg transition until
+   after the flicker completes ────────────────────── */
+button,
+a[style],
+.project-btn,
+[class*="btn"] {
+  transition-delay: 0s;
+}
+
+button:hover,
+a[style]:hover,
+.project-btn:hover,
+[class*="btn"]:hover {
+  transition-property: background, color, border-color, box-shadow;
+  transition-duration: 0.15s;
+  transition-delay: 0.5s;   /* wait for flicker to finish before colour settles */
+}

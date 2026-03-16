@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useSectionReveal } from '../hooks/useSectionReveal'
 
 const techStack = [
@@ -107,6 +108,7 @@ const Hero = () => {
   const [twIdx,  setTwIdx]   = useState(0)
   const [twChar, setTwChar]  = useState(0)
   const [twDel,  setTwDel]   = useState(false)
+  const [photoHovered, setPhotoHovered] = useState(false)
   const [titleRef, titleVisible] = useSectionReveal(0.15)
 
   // Typewriter effect
@@ -145,8 +147,8 @@ const Hero = () => {
         justifyContent: 'center',
         overflow: 'hidden',
         borderBottom: '1px solid var(--border)',
-        paddingTop: '72px',
-        paddingBottom: 0,
+        padding: '48px 2rem 4rem',
+        alignItems: 'center',
       }}
     >
       <NeuralCanvas />
@@ -155,14 +157,14 @@ const Hero = () => {
         className="glass-strong"
         style={{
           position: 'relative', zIndex: 1,
-          maxWidth: 960, margin: '0 auto',
+          maxWidth: 1100, margin: '0 auto',
           padding: '3rem 2rem 3.5rem',
           width: '100%', borderRadius: 20,
           marginBottom: '4rem',
         }}
       >
         {/* Two-column grid: content left, photo right */}
-        <div className="hero-grid">
+        <div className="hero-grid" style={{ gap: '4rem' }}>
 
           {/* LEFT — all existing hero content unchanged */}
           <div>
@@ -259,6 +261,33 @@ const Hero = () => {
               >
                 [ INIT_CONTACT ]
               </a>
+              <Link
+                to="/cv"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.8rem',
+                  letterSpacing: '0.1em',
+                  color: 'var(--cyan)',
+                  border: '1px solid var(--cyan)',
+                  padding: '0.55rem 1.2rem',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'var(--cyan)'
+                  e.currentTarget.style.color = 'var(--bg)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = 'var(--cyan)'
+                }}
+              >
+                ▸ VIEW_CV
+              </Link>
             </div>
 
             {/* Metric Cards */}
@@ -274,35 +303,39 @@ const Hero = () => {
 
           {/* RIGHT — profile photo with BW → colour reveal */}
           <div
-            className="photo-wrapper"
+            className="hero-photo-wrapper"
             style={{
               position: 'relative',
               flexShrink: 0,
               cursor: 'pointer',
+              width: 240,
+              height: 240,
             }}
+            onMouseEnter={() => setPhotoHovered(true)}
+            onMouseLeave={() => setPhotoHovered(false)}
           >
             {/* Spinning gradient ring */}
             <div style={{
               position: 'absolute',
-              inset: -3,
+              inset: -4,
               borderRadius: '50%',
               background: 'linear-gradient(135deg, var(--cyan), var(--purple))',
               zIndex: 0,
               animation: 'spin-slow 6s linear infinite',
             }} />
 
-            {/* Photo container — clips both layers to a circle */}
+            {/* Circle clip container */}
             <div style={{
               position: 'relative',
-              width: 200,
-              height: 200,
+              width: 240,
+              height: 240,
               borderRadius: '50%',
               overflow: 'hidden',
               zIndex: 1,
-              border: '3px solid var(--bg)',
+              border: '4px solid var(--bg)',
             }}>
 
-              {/* LAYER 1 — full colour photo (bottom layer) */}
+              {/* LAYER 1 — full colour (bottom) */}
               <img
                 src="/photo.jpeg"
                 alt="Nitesh SHA"
@@ -312,73 +345,65 @@ const Hero = () => {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: 'center top',
+                  objectPosition: 'center 15%',
                   zIndex: 1,
+                  transform: 'scale(1.12)',
+                  transformOrigin: 'center 30%',
                 }}
               />
 
-              {/* LAYER 2 — greyscale photo (top layer, slides up on hover) */}
+              {/* LAYER 2 — greyscale (top, wipes upward on hover) */}
               <img
                 src="/photo.jpeg"
                 alt=""
                 aria-hidden="true"
-                className="photo-bw"
                 style={{
                   position: 'absolute',
                   inset: 0,
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: 'center top',
+                  objectPosition: 'center 15%',
                   zIndex: 2,
-                  filter: 'grayscale(100%) contrast(1.05) brightness(0.95)',
-                  clipPath: 'inset(0 0 0% 0)',
-                  transition: 'clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transform: 'scale(1.12)',
+                  transformOrigin: 'center 30%',
+                  filter: 'grayscale(100%) contrast(1.08) brightness(0.92)',
+                  clipPath: photoHovered ? 'inset(0 0 100% 0)' : 'inset(0 0 0% 0)',
+                  transition: 'clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               />
 
-              {/* Cyan scan line that sweeps up during hover */}
-              <div
-                className="photo-scanline"
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  height: 2,
-                  background: 'var(--cyan)',
-                  boxShadow: '0 0 8px var(--cyan), 0 0 16px var(--cyan)',
-                  bottom: '0%',
-                  zIndex: 3,
-                  opacity: 0,
-                  transition: 'bottom 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease',
-                }}
-              />
+              {/* Cyan scan line — races upward during hover */}
+              <div style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                height: 2,
+                background: 'var(--cyan)',
+                boxShadow: '0 0 10px var(--cyan), 0 0 20px var(--cyan)',
+                zIndex: 3,
+                bottom: photoHovered ? '100%' : '0%',
+                opacity: photoHovered ? 1 : 0,
+                transition: 'bottom 0.75s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease',
+                pointerEvents: 'none',
+              }} />
             </div>
 
-            {/* Status dot */}
+            {/* Corner bracket — top left */}
             <div style={{
               position: 'absolute',
-              bottom: 12, right: 12,
-              width: 14, height: 14,
-              borderRadius: '50%',
-              background: 'var(--green)',
-              border: '2px solid var(--bg)',
-              zIndex: 4,
-              boxShadow: '0 0 8px var(--green)',
-              animation: 'pulse-dot 2s ease-in-out infinite',
-            }} />
-
-            {/* Corner brackets */}
-            <div style={{
-              position: 'absolute', top: -12, left: -12,
-              width: 24, height: 24,
+              top: -16, left: -16,
+              width: 28, height: 28,
               borderTop: '2px solid var(--cyan)',
               borderLeft: '2px solid var(--cyan)',
               zIndex: 4,
             }} />
+
+            {/* Corner bracket — bottom right */}
             <div style={{
-              position: 'absolute', bottom: -12, right: -12,
-              width: 24, height: 24,
+              position: 'absolute',
+              bottom: -16, right: -16,
+              width: 28, height: 28,
               borderBottom: '2px solid var(--purple)',
               borderRight: '2px solid var(--purple)',
               zIndex: 4,
@@ -429,44 +454,26 @@ const Hero = () => {
           0%, 100% { transform: scale(1);   opacity: 1; }
           50%       { transform: scale(1.4); opacity: 0.7; }
         }
-
-        /* BW → Colour reveal on hover */
-        .photo-wrapper:hover .photo-bw {
-          clip-path: inset(0 0 100% 0);
-        }
-        .photo-wrapper:hover .photo-scanline {
-          bottom: 100%;
-          opacity: 1;
-        }
-        .photo-wrapper:hover > div:first-child {
-          filter: brightness(1.2);
-          transition: filter 0.3s ease;
-        }
-
         .hero-grid {
           display: grid;
           grid-template-columns: 1fr auto;
           align-items: center;
-          gap: 3rem;
-        }
-        .photo-wrapper {
-          width: 200px;
-          height: 200px;
+          gap: 4rem;
         }
         @media (max-width: 767px) {
           .hero-grid {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto;
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
           }
-          .photo-wrapper {
+          .hero-photo-wrapper {
             order: -1;
-            width: 140px;
-            height: 140px;
             margin: 0 auto;
+            width: 160px !important;
+            height: 160px !important;
           }
-          .photo-wrapper > div:nth-child(2) {
-            width: 140px !important;
-            height: 140px !important;
+          .hero-photo-wrapper > div:nth-child(2) {
+            width: 160px !important;
+            height: 160px !important;
           }
         }
       `}</style>
