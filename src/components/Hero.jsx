@@ -147,7 +147,7 @@ const Hero = () => {
         justifyContent: 'center',
         overflow: 'hidden',
         borderBottom: '1px solid var(--border)',
-        padding: '48px 2rem 4rem',
+        padding: '120px 2rem 4rem',
         alignItems: 'center',
       }}
     >
