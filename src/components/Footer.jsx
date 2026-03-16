@@ -15,7 +15,7 @@ const Footer = () => {
     { icon: Github,       href: 'https://github.com/Fr0sTnUb',                         label: 'GitHub' },
     { icon: Linkedin,     href: 'https://www.linkedin.com/in/nitesh-sha-a988b3276/',    label: 'LinkedIn' },
     { icon: MessageSquare,href: 'https://discord.gg/Yxbjf5FUVt',                       label: 'Discord' },
-    { icon: Instagram,    href: 'https://www.instagram.com/fr0st._.rated/',             label: 'Instagram' },
+    { icon: Instagram,    href: 'https://www.instagram.com/aint._.nitesh/',             label: 'Instagram' },
   ]
 
   return (

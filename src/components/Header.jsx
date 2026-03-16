@@ -1,21 +1,19 @@
 import { useState, useEffect } from 'react'
-import { Menu, X, Github, Linkedin, MessageCircle } from 'lucide-react'
-import { useTheme } from '../hooks/useTheme'
 
 const navLinks = [
-  { href: '#hero',     label: 'HOME',     num: '01' },
-  { href: '#about',    label: 'ABOUT',    num: '02' },
-  { href: '#skills',   label: 'SKILLS',   num: '03' },
-  { href: '#projects', label: 'PROJECTS', num: '04' },
-  { href: '#journey',  label: 'JOURNEY',  num: '05' },
-  { href: '#contact',  label: 'CONTACT',  num: '06' },
+  { href: '#hero',         label: 'HOME',     num: '01' },
+  { href: '#about',        label: 'ABOUT',    num: '02' },
+  { href: '#skills',       label: 'SKILLS',   num: '03' },
+  { href: '#projects',     label: 'PROJECTS', num: '04' },
+  { href: '#journey',      label: 'JOURNEY',  num: '05' },
+  { href: '#certificates', label: 'CERTS',    num: '06' },
+  { href: '#contact',      label: 'CONTACT',  num: '07' },
 ]
 
 const Header = () => {
   const [menuOpen, setMenuOpen]           = useState(false)
   const [scrolled, setScrolled]           = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
-  const [isDark, toggleTheme]             = useTheme()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,7 +58,7 @@ const Header = () => {
           transition: 'all 0.3s ease',
         }}
       >
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 2.5rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
 
           {/* Logo */}
           <a
@@ -88,7 +86,7 @@ const Header = () => {
           </a>
 
           {/* Desktop Nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} className="hidden md:flex">
+          <nav className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             {navLinks.map((link) => {
               const isActive = activeSection === link.href.slice(1)
               return (
@@ -98,10 +96,10 @@ const Header = () => {
                   onClick={(e) => handleNavClick(e, link.href)}
                   style={{
                     fontFamily: 'var(--font-mono)',
-                    fontSize: '0.7rem',
+                    fontSize: '0.68rem',
                     fontWeight: isActive ? 700 : 400,
-                    letterSpacing: '0.08em',
-                    padding: '0.4rem 0.85rem',
+                    letterSpacing: '0.05em',
+                    padding: '0.4rem 0.65rem',
                     color: isActive ? 'var(--cyan)' : 'var(--text-dim)',
                     textDecoration: 'none',
                     borderBottom: isActive ? '2px solid var(--cyan)' : '2px solid transparent',
@@ -118,141 +116,221 @@ const Header = () => {
             })}
           </nav>
 
-          {/* Theme toggle — desktop */}
-          <div className="hidden md:flex" style={{ alignItems: 'center', marginLeft: '0.5rem' }}>
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle colour theme"
+          {/* CV download — desktop */}
+          <div className="desktop-cv-btn" style={{ alignItems: 'center', gap: '0.75rem', marginLeft: '1rem', paddingLeft: '1rem', borderLeft: '1px solid var(--border)', flexShrink: 0, display: 'flex' }}>
+            <a
+              href="/Nitesh_CV_v2.pdf"
+              download="Nitesh_CV_v2.pdf"
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
-                color: 'var(--cyan)',
-                background: 'transparent',
+                fontSize: '0.7rem',
+                color: 'var(--bg)',
+                background: 'var(--cyan)',
                 border: '1px solid var(--cyan)',
-                padding: '0.35rem 0.75rem',
+                padding: '0.3rem 0.65rem',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 letterSpacing: '0.08em',
-                transition: 'background 0.2s ease, color 0.2s ease',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease',
+                display: 'inline-block',
                 whiteSpace: 'nowrap',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'var(--cyan)'; e.currentTarget.style.color = 'var(--bg)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--cyan)' }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = 'var(--cyan)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'var(--cyan)'
+                e.currentTarget.style.color = 'var(--bg)'
+              }}
             >
-              <span className="theme-btn-label">{isDark ? '[ LIGHT_MODE ]' : '[ DARK_MODE ]'}</span>
-              <span className="theme-btn-icon">{isDark ? '☀' : '☾'}</span>
-            </button>
+              <span className="cv-btn-label">[ DOWNLOAD_CV ]</span>
+              <span className="cv-btn-icon">↓ CV</span>
+            </a>
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* Hamburger button — visible only on mobile */}
           <button
-            className="md:hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="hamburger"
+            onClick={() => setMenuOpen(prev => !prev)}
             aria-label="Toggle navigation"
             style={{
+              display: 'none',
               background: 'transparent',
-              border: '1px solid var(--border)',
-              padding: '0.5rem 0.85rem',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              color: 'var(--cyan)',
-              letterSpacing: '0.1em',
+              border: '1px solid var(--cyan)',
+              borderRadius: 6,
+              padding: '6px 10px',
               cursor: 'pointer',
+              flexDirection: 'column',
+              gap: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            {menuOpen ? '✕ CLOSE' : '≡ MENU'}
+            <span className={`bar ${menuOpen ? 'bar-top' : ''}`} />
+            <span className={`bar ${menuOpen ? 'bar-mid' : ''}`} />
+            <span className={`bar ${menuOpen ? 'bar-bot' : ''}`} />
           </button>
         </div>
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile nav overlay */}
       <div
-        style={{
-          position: 'fixed', inset: 0, zIndex: 40,
-          visibility: menuOpen ? 'visible' : 'hidden',
-          transition: 'visibility 0.3s',
-        }}
-        className="md:hidden"
+        className={`mobile-nav ${menuOpen ? 'mobile-nav-open' : ''}`}
       >
-        {/* Backdrop */}
-        <div
-          style={{
-            position: 'absolute', inset: 0,
-            background: 'rgba(10,14,26,0.92)',
-            opacity: menuOpen ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-            backdropFilter: 'blur(8px)',
-          }}
+        {navLinks.map((item, i) => (
+          <a
+            key={item.label}
+            href={item.href}
+            className="mobile-nav-link"
+            style={{ animationDelay: `${i * 0.06}s` }}
+            onClick={(e) => { e.preventDefault(); handleNavClick(e, item.href) }}
+          >
+            <span className="mobile-nav-num">[0{i + 1}]</span>
+            {item.label}
+          </a>
+        ))}
+        <a
+          href="/Nitesh_CV_v2.pdf"
+          download
+          className="mobile-nav-link mobile-nav-cv"
           onClick={() => setMenuOpen(false)}
-        />
-
-        {/* Drawer Panel */}
-        <div
-          style={{
-            position: 'absolute', right: 0, top: 0, bottom: 0,
-            width: '300px',
-            background: 'var(--card-bg)',
-            borderLeft: '1px solid var(--border)',
-            display: 'flex', flexDirection: 'column',
-            transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
-            transition: 'transform 0.3s ease',
-          }}
         >
-          <div style={{ paddingTop: '5rem', padding: '5rem 1.5rem 1.5rem' }}>
-            {navLinks.map((link, i) => {
-              const isActive = activeSection === link.href.slice(1)
-              return (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  style={{
-                    display: 'block',
-                    padding: '1rem 0',
-                    borderBottom: '1px solid var(--border)',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.9rem',
-                    color: isActive ? 'var(--cyan)' : 'var(--text-dim)',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s ease',
-                    transitionDelay: menuOpen ? `${i * 40}ms` : '0ms',
-                    opacity: menuOpen ? 1 : 0,
-                    transform: menuOpen ? 'translateX(0)' : 'translateX(20px)',
-                  }}
-                >
-                  &gt; [{link.num}_{link.label}]
-                </a>
-              )
-            })}
-          </div>
-
-          <div style={{ marginTop: 'auto', padding: '1.5rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.75rem' }}>
-            {[
-              { icon: Github, href: 'https://github.com/Fr0sTnUb' },
-              { icon: Linkedin, href: 'https://www.linkedin.com/in/nitesh-sha-a988b3276/' },
-              { icon: MessageCircle, href: 'https://discord.gg/Yxbjf5FUVt' },
-            ].map(({ icon: Icon, href }) => (
-              <a
-                key={href}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  width: 40, height: 40,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-dim)',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--cyan)'; e.currentTarget.style.color = 'var(--cyan)' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-dim)' }}
-              >
-                <Icon size={18} />
-              </a>
-            ))}
-          </div>
-        </div>
+          [ DOWNLOAD_CV ]
+        </a>
       </div>
+
+      <style>{`
+        /* ── Hamburger bars ─────────────────────────────── */
+        .bar {
+          display: block;
+          width: 22px;
+          height: 2px;
+          background: var(--cyan);
+          border-radius: 2px;
+          transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                      opacity   0.2s ease;
+          transform-origin: center;
+        }
+        .bar-top { transform: translateY(7px) rotate(45deg);  }
+        .bar-mid { opacity: 0; transform: scaleX(0);          }
+        .bar-bot { transform: translateY(-7px) rotate(-45deg);}
+
+        /* ── Show hamburger on mobile only ─────────────── */
+        @media (max-width: 767px) {
+          .hamburger        { display: flex !important; }
+          .desktop-nav      { display: none !important; }
+          .desktop-cv-btn   { display: none !important; }
+        }
+
+        /* ── Mobile nav overlay ─────────────────────────── */
+        .mobile-nav {
+          position: fixed;
+          top: 72px;
+          left: 0; right: 0;
+          height: 0;
+          overflow: hidden;
+          background: rgba(10, 14, 26, 0.97);
+          backdrop-filter: blur(24px);
+          border-bottom: 1px solid var(--border);
+          z-index: 998;
+          transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 0 2rem;
+        }
+
+        .mobile-nav-open {
+          height: 420px;
+          padding: 1.5rem 2rem;
+        }
+
+        /* ── Individual link — flies in from left ────────── */
+        .mobile-nav-link {
+          font-family: 'Courier New', monospace;
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: var(--text);
+          text-decoration: none;
+          text-transform: uppercase;
+          padding: 0.6rem 0;
+          width: 100%;
+          border-bottom: 1px solid var(--border);
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          opacity: 0;
+          transform: translateX(-40px) skewX(-8deg);
+          transition:
+            color     0.2s ease,
+            transform 0.2s ease;
+          animation: none;
+        }
+
+        .mobile-nav-open .mobile-nav-link {
+          animation: link-slam 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .mobile-nav-link:hover {
+          color: var(--cyan);
+          transform: translateX(8px) skewX(0deg);
+          border-bottom-color: var(--cyan);
+        }
+
+        .mobile-nav-num {
+          font-size: 0.65rem;
+          color: var(--cyan);
+          opacity: 0.7;
+          min-width: 32px;
+        }
+
+        .mobile-nav-cv {
+          color: var(--cyan);
+          border: 1px solid var(--cyan);
+          border-radius: 6px;
+          padding: 0.5rem 1rem;
+          margin-top: 0.75rem;
+          width: auto;
+          font-size: 0.8rem;
+          justify-content: center;
+        }
+
+        /* ── Entrance keyframe ──────────────────────────── */
+        @keyframes link-slam {
+          0% {
+            opacity: 0;
+            transform: translateX(-60px) skewX(-12deg) scaleY(1.3);
+            filter: blur(4px);
+            letter-spacing: 0.4em;
+          }
+          60% {
+            opacity: 1;
+            transform: translateX(6px) skewX(2deg) scaleY(0.97);
+            filter: blur(0);
+            letter-spacing: 0.08em;
+          }
+          80% {
+            transform: translateX(-2px) skewX(-1deg) scaleY(1.01);
+            letter-spacing: 0.11em;
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0) skewX(0) scaleY(1);
+            filter: blur(0);
+            letter-spacing: 0.12em;
+          }
+        }
+
+        /* ── CV button responsive ──────────────────────── */
+        .cv-btn-icon { display: none; }
+        @media (max-width: 1100px) {
+          .cv-btn-label { display: none; }
+          .cv-btn-icon  { display: inline; }
+        }
+      `}</style>
     </>
   )
 }
