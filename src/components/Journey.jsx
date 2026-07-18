@@ -87,7 +87,7 @@ const Journey = () => {
         <div className="reveal" style={{ marginBottom: '4rem' }}>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '1rem' }}>
             <span style={{ color: '#6b7280' }}># ──</span>{' '}
-            <span style={{ color: 'var(--cyan)' }}>04. SYSTEM_LOG</span>{' '}
+            <span style={{ color: 'var(--cyan)' }}>05. SYSTEM_LOG</span>{' '}
             <span style={{ color: '#1e2d40' }}>{'─'.repeat(40)}</span>
           </p>
           <h2

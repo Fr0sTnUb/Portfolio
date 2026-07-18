@@ -69,7 +69,7 @@ const Contact = () => {
         <div className="reveal" style={{ marginBottom: '4rem', textAlign: 'center' }}>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '1rem' }}>
             <span style={{ color: '#6b7280' }}># ──</span>{' '}
-            <span style={{ color: 'var(--cyan)' }}>05. INITIALIZE_CONNECTION</span>{' '}
+            <span style={{ color: 'var(--cyan)' }}>06. INITIALIZE_CONNECTION</span>{' '}
             <span style={{ color: '#1e2d40' }}>{'─'.repeat(24)}</span>
           </p>
           <h2

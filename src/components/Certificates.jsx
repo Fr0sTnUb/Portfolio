@@ -104,7 +104,7 @@ const Certificates = () => {
             marginBottom: '0.75rem',
           }}
         >
-          # ── 06. VALIDATED_CHECKPOINTS ────────────
+          # ── 04. CERTIFICATIONS ────────────
         </div>
         <h2
           ref={titleRef}

@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 
 const navLinks = [
-  { href: '#hero',         label: 'HOME',     num: '01' },
-  { href: '#about',        label: 'ABOUT',    num: '02' },
-  { href: '#skills',       label: 'SKILLS',   num: '03' },
-  { href: '#projects',     label: 'PROJECTS', num: '04' },
+  { href: '#hero',         label: 'HOME',     num: '00' },
+  { href: '#about',        label: 'ABOUT',    num: '01' },
+  { href: '#skills',       label: 'SKILLS',   num: '02' },
+  { href: '#projects',     label: 'PROJECTS', num: '03' },
+  { href: '#certificates', label: 'CERTS',    num: '04' },
   { href: '#journey',      label: 'JOURNEY',  num: '05' },
-  { href: '#certificates', label: 'CERTS',    num: '06' },
-  { href: '#contact',      label: 'CONTACT',  num: '07' },
+  { href: '#contact',      label: 'CONTACT',  num: '06' },
 ]
 
 const Header = () => {
