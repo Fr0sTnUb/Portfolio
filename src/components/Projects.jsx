@@ -4,6 +4,13 @@ import { useSectionReveal } from '../hooks/useSectionReveal'
 
 const projects = [
   {
+    title: 'SentriQ',
+    description: 'Real-time credit card fraud detection & MLOps platform. Features real-time fraud scoring via FastAPI, drift detection with a SciPy KS-test, PostgreSQL for persistence, and WebSocket support on Fluid compute.',
+    tech: ['XGBoost', 'FastAPI', 'React', 'PostgreSQL', 'Docker'],
+    badge: '⭐ Featured', badgeColor: 'var(--cyan)',
+    github: 'https://github.com/Fr0sTnUb/SentriQ-Real_Time_Risk_Detection_-_Risk_Scoring', live: null,
+  },
+  {
     title: 'MTA Daily Ridership Analysis',
     description: 'A deep dive into NYC transit usage before, during, and after the pandemic. Built with Python, Pandas, and visualization stacks to surface actionable insights.',
     tech: ['Python', 'Pandas', 'Matplotlib', 'Data Viz'],
@@ -24,14 +31,7 @@ const projects = [
     badge: 'Moderation Bot', badgeColor: 'var(--purple)',
     github: 'https://github.com/Fr0sTnUb/Uchiha', live: null,
   },
-  {
-    title: 'Discord Bot Web',
-    description: 'A polished landing experience for Discord bots, highlighting commands and feature sets. Crafted with responsive CSS and community-driven design patterns.',
-    tech: ['HTML', 'CSS', 'JavaScript', 'Design'],
-    badge: '⭐ Featured', badgeColor: 'var(--cyan)',
-    github: 'https://github.com/Fr0sTnUb/discord-bot-web', live: null,
-    status: null,
-  },
+
   {
     title: 'fr0st._.rated — Portfolio',
     description: 'Personal portfolio SPA built with React + Vite featuring GSAP ScrollTrigger animations, glassmorphism design system, animated particle background, custom GSAP cursor, multi-stage Docker build, and AWS EC2 deployment with nginx.',
@@ -42,11 +42,11 @@ const projects = [
   },
   {
     title: 'Fashion Chatbot',
-    description: 'AI-powered fashion assistant chatbot built with Python. Provides personalised outfit recommendations, style advice, and trend insights through a conversational interface. Deployment via Vercel coming soon.',
+    description: 'AI-powered fashion assistant chatbot built with Python. Provides personalised outfit recommendations, style advice, and trend insights through a conversational interface.',
     tech: ['Python', 'AI/ML', 'NLP', 'Chatbot', 'Vercel'],
     badge: 'AI Assistant', badgeColor: 'var(--purple)',
-    github: 'https://github.com/Fr0sTnUb/chatbot-fashion', live: null,
-    status: 'DEPLOYING_SOON',
+    github: 'https://github.com/Fr0sTnUb/chatbot-fashion', live: 'https://adornai.vercel.app/',
+    status: 'LIVE',
   },
 ]
 
